@@ -1,5 +1,6 @@
 package com.project.jhub.user.domain;
 
+import com.project.jhub.global.domain.BaseEntity;
 import com.project.jhub.user.dto.request.UserUpdateRequest;
 import com.project.jhub.user.dto.response.UserResponse;
 import lombok.AccessLevel;
@@ -20,7 +21,7 @@ import javax.persistence.Table;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "users")
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
