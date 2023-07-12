@@ -5,6 +5,9 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
+    //공용
+    INVALID_INPUT_VALUE(400, "잘못된 값을 입력 하셨습니다."),
+
     // 유저
     DUPLICATED_USERNAME(400, "중복된 ID입니다."),
     DUPLICATED_NICKNAME(400, "이미 사용중인 닉네임 입니다."),
