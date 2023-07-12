@@ -21,7 +21,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/user")
+@RequestMapping("/api/v1/user")
 public class UserApiController {
 
     private final UserService userService;
