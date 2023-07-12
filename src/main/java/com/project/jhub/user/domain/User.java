@@ -56,6 +56,7 @@ public class User extends BaseEntity {
 
     public UserResponse toDto() {
         return UserResponse.builder()
+                .id(id)
                 .username(username)
                 .nickname(nickname)
                 .introduction(introduction)
