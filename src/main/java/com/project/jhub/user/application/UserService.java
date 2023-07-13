@@ -25,8 +25,7 @@ public class UserService {
 
     @Transactional
     public UserResponse join(UserJoinRequestDto request) {
-        duplicatedUsername(request.getUsername());
-        duplicatedNickname(request.getNickname());
+        duplicatedUser(request.getUsername(), request.getNickname());
 
         User savedUser = userRepository.save(request.toEntity());
 
@@ -57,13 +56,7 @@ public class UserService {
 
         user.updateUser(updateRequest);
 
-        return UserResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .nickname(user.getNickname())
-                .introduction(user.getIntroduction())
-                .userRole(user.getUserRole())
-                .build();
+        return user.toDto();
     }
 
     @Transactional
@@ -79,13 +72,11 @@ public class UserService {
         userRepository.deleteAll();
     }
 
-    private void duplicatedUsername(String username) {
+    private void duplicatedUser(String username, String nickname) {
         userRepository.findByUsername(username).ifPresent(user -> {
             throw new BusinessException(DUPLICATED_USERNAME);
         });
-    }
 
-    private void duplicatedNickname(String nickname) {
         userRepository.findByNickname(nickname).ifPresent(user -> {
             throw new BusinessException(DUPLICATED_NICKNAME);
         });
