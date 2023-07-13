@@ -11,20 +11,20 @@ import java.util.Map;
 public class ErrorResponse {
 
     private int status;
-    private String errorMessage;
+    private String message;
     private Map<String, String> errorMap;
 
     @Builder
-    public ErrorResponse(int status, String errorMessage, Map<String, String> valid) {
+    public ErrorResponse(int status, String message, Map<String, String> valid) {
         this.status = status;
-        this.errorMessage = errorMessage;
+        this.message = message;
         this.errorMap = valid != null ? valid : new HashMap<>();
     }
 
     public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode) {
         return ResponseEntity.status(errorCode.getStatus())
                 .body(ErrorResponse.builder()
-                        .errorMessage(errorCode.getMessage())
+                        .message(errorCode.getMessage())
                         .build());
     }
 

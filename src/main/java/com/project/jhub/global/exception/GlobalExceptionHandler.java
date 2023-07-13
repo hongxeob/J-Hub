@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidMethodArgumentException(MethodArgumentNotValidException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(INVALID_INPUT_VALUE.getStatus())
-                .errorMessage(INVALID_INPUT_VALUE.getMessage())
+                .message(INVALID_INPUT_VALUE.getMessage())
                 .build();
 
         for (FieldError fieldError : e.getFieldErrors()) {
