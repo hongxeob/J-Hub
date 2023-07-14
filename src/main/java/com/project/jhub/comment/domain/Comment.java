@@ -1,5 +1,6 @@
 package com.project.jhub.comment.domain;
 
+import com.project.jhub.comment.dto.request.CommentUpdateRequest;
 import com.project.jhub.comment.dto.response.CommentResponse;
 import com.project.jhub.global.domain.BaseEntity;
 import com.project.jhub.post.domain.Post;
@@ -55,7 +56,7 @@ public class Comment extends BaseEntity {
                 .build();
     }
 
-    public void updateComment(String newContent) {
-        this.content = newContent;
+    public void updateComment(CommentUpdateRequest updateRequest) {
+        this.content = updateRequest.getContent();
     }
 }

@@ -30,7 +30,8 @@ public class PostService {
         User user = userRepository.findByUsername(postCreateRequest.getUsername())
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_USER));
 
-        postCreateRequest.setUser(user);
+        postCreateRequest.insertUser(user);
+
         Post post = postCreateRequest.toEntity();
         postRepository.save(post);
 
@@ -102,6 +103,7 @@ public class PostService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
 
         post.updatePost(updateRequest);
+
         return post.toWithUserDto();
     }
 }

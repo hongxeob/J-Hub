@@ -41,4 +41,8 @@ public class PostCreateRequest {
                 .user(user)
                 .build();
     }
+
+    public void insertUser(User user) {
+        this.user = user;
+    }
 }

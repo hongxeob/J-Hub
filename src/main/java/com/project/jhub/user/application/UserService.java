@@ -64,7 +64,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(NOT_FOUND_USER));
 
-        userRepository.deleteById(id);
+        userRepository.deleteById(user.getId());
     }
 
     @Transactional
