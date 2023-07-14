@@ -3,6 +3,7 @@ package com.project.jhub.post.domain;
 import com.project.jhub.global.domain.BaseEntity;
 import com.project.jhub.post.dto.request.PostUpdateRequest;
 import com.project.jhub.post.dto.response.PostResponse;
+import com.project.jhub.post.dto.response.PostWithUserResponse;
 import com.project.jhub.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,12 +47,20 @@ public class Post extends BaseEntity {
         this.user = user;
     }
 
+    public PostWithUserResponse toWithUserDto() {
+        return PostWithUserResponse.builder()
+                .id(id)
+                .title(title)
+                .content(content)
+                .userResponse(user.toDto())
+                .build();
+    }
+
     public PostResponse toDto() {
         return PostResponse.builder()
                 .id(id)
                 .title(title)
                 .content(content)
-                .userResponse(user.toDto())
                 .build();
     }
 

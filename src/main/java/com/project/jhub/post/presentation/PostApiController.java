@@ -5,7 +5,6 @@ import com.project.jhub.post.application.PostService;
 import com.project.jhub.post.dto.request.PostCreateRequest;
 import com.project.jhub.post.dto.request.PostUpdateRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +21,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/post")
+@RequestMapping("/api/v1/posts")
 public class PostApiController {
 
     private final PostService postService;
@@ -36,12 +35,30 @@ public class PostApiController {
                 .build(), CREATED);
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<CommonResponse> getPostList(Pageable pageable) {
+    @GetMapping
+    public ResponseEntity<CommonResponse> getPostList() {
         return new ResponseEntity<>(CommonResponse.builder()
                 .status(OK.value())
-                .message("전제 조회 성공")
-                .body(postService.findAll(pageable))
+                .message("전체 조회 성공")
+                .body(postService.findAll())
+                .build(), OK);
+    }
+
+    @GetMapping("/with-user")
+    public ResponseEntity<CommonResponse> getPostListWithUser() {
+        return new ResponseEntity<>(CommonResponse.builder()
+                .status(OK.value())
+                .message("유저 정보와 함께 조회 성공")
+                .body(postService.findAllWithUser())
+                .build(), OK);
+    }
+
+    @GetMapping("/with-user/{id}")
+    public ResponseEntity<CommonResponse> getPostWithUser(@PathVariable Long id) {
+        return new ResponseEntity<>(CommonResponse.builder()
+                .status(OK.value())
+                .message("유저 정보와 함께 조회 성공")
+                .body(postService.findByIdWithUser(id))
                 .build(), OK);
     }
 
