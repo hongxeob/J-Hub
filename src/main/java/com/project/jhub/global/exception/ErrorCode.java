@@ -14,7 +14,10 @@ public enum ErrorCode {
     NOT_FOUND_USER(404, "회원이 존재하지 않습니다."),
 
     // 게시물
-    NOT_FOUND_POST(404, "게시물이 존재하지 않습니다.");
+    NOT_FOUND_POST(404, "게시물이 존재하지 않습니다."),
+
+    //댓글
+    NOT_FOUND_COMMENT(404, "댓글이 존재하지 않습니다.");
 
     private final int status;
     private final String message;
