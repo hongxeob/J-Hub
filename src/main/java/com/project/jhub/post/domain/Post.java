@@ -1,5 +1,6 @@
 package com.project.jhub.post.domain;
 
+import com.project.jhub.comment.domain.Comment;
 import com.project.jhub.global.domain.BaseEntity;
 import com.project.jhub.post.dto.request.PostUpdateRequest;
 import com.project.jhub.post.dto.response.PostResponse;
@@ -9,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +20,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -39,12 +43,16 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
+
     @Builder
-    public Post(Long id, String title, String content, User user) {
+    public Post(Long id, String title, String content, User user, List<Comment> comments) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.user = user;
+        this.comments = comments;
     }
 
     public PostWithUserResponse toWithUserDto() {
