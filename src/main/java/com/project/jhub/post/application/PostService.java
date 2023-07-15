@@ -8,8 +8,6 @@ import com.project.jhub.post.dto.request.PostCreateRequest;
 import com.project.jhub.post.dto.request.PostUpdateRequest;
 import com.project.jhub.post.dto.response.PostListResponse;
 import com.project.jhub.post.dto.response.PostResponse;
-import com.project.jhub.post.dto.response.PostWithUserListResponse;
-import com.project.jhub.post.dto.response.PostWithUserResponse;
 import com.project.jhub.user.domain.User;
 import com.project.jhub.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +24,7 @@ public class PostService {
     private final UserRepository userRepository;
 
     @Transactional
-    public PostWithUserResponse write(PostCreateRequest postCreateRequest) {
+    public PostResponse write(PostCreateRequest postCreateRequest) {
         User user = userRepository.findByUsername(postCreateRequest.getUsername())
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_USER));
 
@@ -35,12 +33,12 @@ public class PostService {
         Post post = postCreateRequest.toEntity();
         postRepository.save(post);
 
-        return post.toWithUserDto();
+        return post.toDto();
     }
 
     @Transactional(readOnly = true)
-    public PostListResponse findAll() {
-        List<Post> posts = postRepository.findAll();
+    public PostListResponse findAllWithUserAndComments() {
+        List<Post> posts = postRepository.findAllWithUserAndComments();
 
         return new PostListResponse(posts.stream()
                 .map(Post::toDto)
@@ -48,20 +46,11 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostWithUserListResponse findAllWithUser() {
-        List<Post> posts = postRepository.findAllWithUser();
-
-        return new PostWithUserListResponse(posts.stream()
-                .map(Post::toWithUserDto)
-                .toList());
-    }
-
-    @Transactional(readOnly = true)
-    public PostWithUserResponse findByIdWithUser(Long id) {
-        Post post = postRepository.findByIdWithUser(id)
+    public PostResponse findByIdWithUserAndComments(Long id) {
+        Post post = postRepository.findByIdWithUserAndComments(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
 
-        return post.toWithUserDto();
+        return post.toDto();
     }
 
     @Transactional(readOnly = true)
@@ -73,14 +62,14 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostWithUserListResponse findByUserId(Long userId) {
+    public PostListResponse findByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_USER));
 
         List<Post> posts = postRepository.findByUserId(user.getId());
 
-        return new PostWithUserListResponse(posts.stream()
-                .map(Post::toWithUserDto)
+        return new PostListResponse(posts.stream()
+                .map(Post::toDto)
                 .toList());
     }
 
@@ -98,12 +87,12 @@ public class PostService {
     }
 
     @Transactional
-    public PostWithUserResponse update(Long id, PostUpdateRequest updateRequest) {
+    public PostResponse update(Long id, PostUpdateRequest updateRequest) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
 
         post.updatePost(updateRequest);
 
-        return post.toWithUserDto();
+        return post.toDto();
     }
 }

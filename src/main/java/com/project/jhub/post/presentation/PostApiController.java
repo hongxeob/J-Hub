@@ -39,26 +39,8 @@ public class PostApiController {
     public ResponseEntity<CommonResponse> getPostList() {
         return new ResponseEntity<>(CommonResponse.builder()
                 .status(OK.value())
-                .message("전체 조회 성공")
-                .body(postService.findAll())
-                .build(), OK);
-    }
-
-    @GetMapping("/with-user")
-    public ResponseEntity<CommonResponse> getPostListWithUser() {
-        return new ResponseEntity<>(CommonResponse.builder()
-                .status(OK.value())
-                .message("유저 정보와 함께 조회 성공")
-                .body(postService.findAllWithUser())
-                .build(), OK);
-    }
-
-    @GetMapping("/with-user/{id}")
-    public ResponseEntity<CommonResponse> getPostWithUser(@PathVariable Long id) {
-        return new ResponseEntity<>(CommonResponse.builder()
-                .status(OK.value())
-                .message("유저 정보와 함께 조회 성공")
-                .body(postService.findByIdWithUser(id))
+                .message("유저 정보와 댓글까지 함께 조회 성공")
+                .body(postService.findAllWithUserAndComments())
                 .build(), OK);
     }
 
@@ -66,8 +48,8 @@ public class PostApiController {
     public ResponseEntity<CommonResponse> getPost(@PathVariable Long id) {
         return new ResponseEntity<>(CommonResponse.builder()
                 .status(OK.value())
-                .message("조회 성공")
-                .body(postService.findById(id))
+                .message("유저 정보와 댓글까지 함께 조회 성공")
+                .body(postService.findByIdWithUserAndComments(id))
                 .build(), OK);
     }
 

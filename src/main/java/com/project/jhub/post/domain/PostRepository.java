@@ -11,9 +11,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByUserId(Long userId);
 
-    @Query("select p from Post p join fetch p.user")
-    List<Post> findAllWithUser();
+    @Query("SELECT p FROM Post p Left JOIN FETCH p.user Left JOIN FETCH p.comments")
+    List<Post> findAllWithUserAndComments();
 
-    @Query("select p from Post p JOIN fetch p.user where p.id= :id")
-    Optional<Post> findByIdWithUser(@Param("id") Long id);
+    @Query("SELECT distinct p FROM Post p Left JOIN FETCH p.user Left JOIN FETCH p.comments WHERE p.id = :id")
+    Optional<Post> findByIdWithUserAndComments(@Param("id") Long id);
 }

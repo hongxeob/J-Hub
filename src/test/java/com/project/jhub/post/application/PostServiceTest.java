@@ -5,8 +5,8 @@ import com.project.jhub.post.domain.Post;
 import com.project.jhub.post.domain.PostRepository;
 import com.project.jhub.post.dto.request.PostCreateRequest;
 import com.project.jhub.post.dto.request.PostUpdateRequest;
-import com.project.jhub.post.dto.response.PostWithUserListResponse;
-import com.project.jhub.post.dto.response.PostWithUserResponse;
+import com.project.jhub.post.dto.response.PostListResponse;
+import com.project.jhub.post.dto.response.PostResponse;
 import com.project.jhub.user.domain.User;
 import com.project.jhub.user.domain.UserRepository;
 import com.project.jhub.user.domain.UserRole;
@@ -15,8 +15,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -49,7 +47,6 @@ class PostServiceTest {
                 .build();
 
         savedUser = userRepository.save(user);
-
     }
 
     @Test
@@ -64,7 +61,7 @@ class PostServiceTest {
                 .build();
 
         //when
-        PostWithUserResponse savedPost = postService.write(postCreateRequest);
+        PostResponse savedPost = postService.write(postCreateRequest);
 
         //then
         assertThat(savedPost.getContent()).isEqualTo(postCreateRequest.getContent());
@@ -100,11 +97,10 @@ class PostServiceTest {
         postService.write(postCreateRequest);
 
         //when
-        Pageable pageable = PageRequest.of(0, 10);
-        PostWithUserListResponse postWithUserListResponse = postService.findAllWithUser();
+        PostListResponse postWithUserListResponse = postService.findAllWithUserAndComments();
 
         //then
-        assertThat(postWithUserListResponse.getPostWithUserResponseList().isEmpty()).isEqualTo(false);
+        assertThat(postWithUserListResponse.getPostResponseList().isEmpty()).isEqualTo(false);
     }
 
     @Test
@@ -118,10 +114,10 @@ class PostServiceTest {
                 .username(savedUser.getUsername())
                 .build();
 
-        PostWithUserResponse savedPost = postService.write(postCreateRequest);
+        PostResponse savedPost = postService.write(postCreateRequest);
 
         //when
-        PostWithUserResponse postWithUserResponse = postService.findByIdWithUser(savedPost.getId());
+        PostResponse postWithUserResponse = postService.findByIdWithUserAndComments(savedPost.getId());
 
         //then
         assertThat(postWithUserResponse.getTitle()).isEqualTo(postCreateRequest.getTitle());
@@ -141,7 +137,7 @@ class PostServiceTest {
                 .build();
 
         //when -> then
-        assertThrows(BusinessException.class, () -> postService.findByIdWithUser(post.getId()));
+        assertThrows(BusinessException.class, () -> postService.findByIdWithUserAndComments(post.getId()));
     }
 
     @Test
@@ -155,7 +151,7 @@ class PostServiceTest {
                 .username(savedUser.getUsername())
                 .build();
 
-        PostWithUserResponse savedPost = postService.write(postCreateRequest);
+        PostResponse savedPost = postService.write(postCreateRequest);
 
         PostUpdateRequest updateRequest = PostUpdateRequest.builder()
                 .title("두번째게시물등장")
@@ -163,7 +159,7 @@ class PostServiceTest {
                 .build();
 
         //when
-        PostWithUserResponse updatedPost = postService.update(savedPost.getId(), updateRequest);
+        PostResponse updatedPost = postService.update(savedPost.getId(), updateRequest);
 
         //then
         assertThat(savedPost.getId()).isEqualTo(updatedPost.getId());
@@ -202,7 +198,7 @@ class PostServiceTest {
                 .username(savedUser.getUsername())
                 .build();
 
-        PostWithUserResponse savedPost = postService.write(postCreateRequest);
+        PostResponse savedPost = postService.write(postCreateRequest);
 
         //when
         postService.deleteById(savedPost.getId());
@@ -240,7 +236,7 @@ class PostServiceTest {
                 .username(savedUser.getUsername())
                 .build();
 
-        PostWithUserResponse savedPost = postService.write(postCreateRequest);
+        PostResponse savedPost = postService.write(postCreateRequest);
 
         //when
         postService.deleteAll();

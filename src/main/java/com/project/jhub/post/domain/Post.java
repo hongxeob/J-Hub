@@ -4,7 +4,6 @@ import com.project.jhub.comment.domain.Comment;
 import com.project.jhub.global.domain.BaseEntity;
 import com.project.jhub.post.dto.request.PostUpdateRequest;
 import com.project.jhub.post.dto.response.PostResponse;
-import com.project.jhub.post.dto.response.PostWithUserResponse;
 import com.project.jhub.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -52,16 +52,7 @@ public class Post extends BaseEntity {
         this.title = title;
         this.content = content;
         this.user = user;
-        this.comments = comments;
-    }
-
-    public PostWithUserResponse toWithUserDto() {
-        return PostWithUserResponse.builder()
-                .id(id)
-                .title(title)
-                .content(content)
-                .userResponse(user.toDto())
-                .build();
+        this.comments = new ArrayList<>();
     }
 
     public PostResponse toDto() {
@@ -69,6 +60,8 @@ public class Post extends BaseEntity {
                 .id(id)
                 .title(title)
                 .content(content)
+                .userResponse(user.toDto())
+                .commentResponseList(comments.stream().map(Comment::toDto).toList())
                 .build();
     }
 
