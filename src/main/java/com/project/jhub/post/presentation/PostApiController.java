@@ -2,6 +2,7 @@ package com.project.jhub.post.presentation;
 
 import com.project.jhub.global.response.CommonResponse;
 import com.project.jhub.post.application.PostService;
+import com.project.jhub.post.domain.Category;
 import com.project.jhub.post.dto.request.PostCreateRequest;
 import com.project.jhub.post.dto.request.PostUpdateRequest;
 import lombok.RequiredArgsConstructor;
@@ -62,18 +63,27 @@ public class PostApiController {
                 .build(), OK);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<CommonResponse> updatePost(@PathVariable Long id, PostUpdateRequest updateRequest) {
+    @GetMapping("/category/{category}")
+    public ResponseEntity<CommonResponse> getPostListByCategory(@PathVariable Category category) {
         return new ResponseEntity<>(CommonResponse.builder()
                 .status(OK.value())
-                .message("유저 업데이트 성공")
+                .message("해당 카테고리에 맞는 게시물 조회 성공")
+                .body(postService.findByCategory(category))
+                .build(), OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<CommonResponse> updatePost(@PathVariable Long id, @RequestBody PostUpdateRequest updateRequest) {
+        return new ResponseEntity<>(CommonResponse.builder()
+                .status(OK.value())
+                .message("게시물 업데이트 성공")
                 .body(postService.update(id, updateRequest))
                 .build(), OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse> deleteOne(@PathVariable Long id) {
-        postService.deleteById(id);
+    public ResponseEntity<CommonResponse> deleteOne(@PathVariable Long id, String username) {
+        postService.deleteById(id, username);
 
         return new ResponseEntity<>(CommonResponse.builder()
                 .status(OK.value())

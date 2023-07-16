@@ -2,6 +2,7 @@ package com.project.jhub.post.application;
 
 import com.project.jhub.global.exception.BusinessException;
 import com.project.jhub.global.exception.ErrorCode;
+import com.project.jhub.post.domain.Category;
 import com.project.jhub.post.domain.Post;
 import com.project.jhub.post.domain.PostRepository;
 import com.project.jhub.post.dto.request.PostCreateRequest;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.project.jhub.global.exception.ErrorCode.NOT_FOUND_POST;
+import static com.project.jhub.global.exception.ErrorCode.NOT_MATCHED_USER_AND_POST;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +52,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostResponse findByIdWithUserAndComments(Long id) {
         Post post = postRepository.findByIdWithUserAndComments(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
+                .orElseThrow(() -> new BusinessException(NOT_FOUND_POST));
 
         return post.toDto();
     }
@@ -56,7 +60,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostResponse findById(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
+                .orElseThrow(() -> new BusinessException(NOT_FOUND_POST));
 
         return post.toDto();
     }
@@ -73,10 +77,21 @@ public class PostService {
                 .toList());
     }
 
+    @Transactional(readOnly = true)
+    public PostListResponse findByCategory(Category category) {
+        List<Post> posts = postRepository.findByCategory(category);
+
+        return new PostListResponse(posts.stream()
+                .map(Post::toDto)
+                .toList());
+    }
+
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(Long id, String username) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
+                .orElseThrow(() -> new BusinessException(NOT_FOUND_POST));
+
+        sameCheckAuthorAndModifier(post.getUser().getUsername(), username);
 
         postRepository.deleteById(post.getId());
     }
@@ -89,10 +104,18 @@ public class PostService {
     @Transactional
     public PostResponse update(Long id, PostUpdateRequest updateRequest) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
+                .orElseThrow(() -> new BusinessException(NOT_FOUND_POST));
+
+        sameCheckAuthorAndModifier(post.getUser().getUsername(), updateRequest.getUsername());
 
         post.updatePost(updateRequest);
 
         return post.toDto();
+    }
+
+    private void sameCheckAuthorAndModifier(String author, String modifier) {
+        if (!author.equals(modifier)) {
+            throw new BusinessException(NOT_MATCHED_USER_AND_POST);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.project.jhub.post.application;
 
 import com.project.jhub.global.exception.BusinessException;
+import com.project.jhub.post.domain.Category;
 import com.project.jhub.post.domain.Post;
 import com.project.jhub.post.domain.PostRepository;
 import com.project.jhub.post.dto.request.PostCreateRequest;
@@ -91,6 +92,7 @@ class PostServiceTest {
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
                 .title("첫번째게시물등장")
                 .content("spring Guultip 쏩니다.")
+                .category(Category.KNOWLEDGE)
                 .username(savedUser.getUsername())
                 .build();
 
@@ -111,6 +113,7 @@ class PostServiceTest {
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
                 .title("첫번째게시물등장")
                 .content("spring Guultip 쏩니다.")
+                .category(Category.KNOWLEDGE)
                 .username(savedUser.getUsername())
                 .build();
 
@@ -132,12 +135,34 @@ class PostServiceTest {
         Post post = Post.builder()
                 .id(2L)
                 .title("asdfasdfasdf")
+                .category(Category.KNOWLEDGE)
                 .content("asdfasdfadsf")
                 .user(savedUser)
                 .build();
 
         //when -> then
         assertThrows(BusinessException.class, () -> postService.findByIdWithUserAndComments(post.getId()));
+    }
+
+    @Test
+    @DisplayName("카테고리로 게시물 조회 성공")
+    void findByCategorySuccessTest() throws Exception {
+
+        //given
+        PostCreateRequest postCreateRequest = PostCreateRequest.builder()
+                .title("첫번째게시물등장")
+                .content("spring Guultip 쏩니다.")
+                .category(Category.KNOWLEDGE)
+                .username(savedUser.getUsername())
+                .build();
+
+        PostResponse savedPost = postService.write(postCreateRequest);
+
+        //when
+        PostListResponse posts = postService.findByCategory(savedPost.getCategory());
+
+        //then
+        assertThat(posts.getPostResponseList().get(0).getCategory()).isEqualTo(savedPost.getCategory());
     }
 
     @Test
@@ -148,6 +173,7 @@ class PostServiceTest {
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
                 .title("첫번째게시물등장")
                 .content("spring Guultip 쏩니다.")
+                .category(Category.KNOWLEDGE)
                 .username(savedUser.getUsername())
                 .build();
 
@@ -155,6 +181,7 @@ class PostServiceTest {
 
         PostUpdateRequest updateRequest = PostUpdateRequest.builder()
                 .title("두번째게시물등장")
+                .username(savedUser.getUsername())
                 .content("django 꿀팁 쏩니다")
                 .build();
 
@@ -175,12 +202,14 @@ class PostServiceTest {
                 .id(2L)
                 .title("asdfasdfasdf")
                 .content("asdfasdfadsf")
+                .category(Category.KNOWLEDGE)
                 .user(savedUser)
                 .build();
 
         PostUpdateRequest updateRequest = PostUpdateRequest.builder()
                 .title("두번째게시물등장")
                 .content("django 꿀팁 쏩니다")
+                .category(Category.KNOWLEDGE)
                 .build();
 
         //when -> then
@@ -196,12 +225,13 @@ class PostServiceTest {
                 .title("첫번째게시물등장")
                 .content("spring Guultip 쏩니다.")
                 .username(savedUser.getUsername())
+                .category(Category.KNOWLEDGE)
                 .build();
 
         PostResponse savedPost = postService.write(postCreateRequest);
 
         //when
-        postService.deleteById(savedPost.getId());
+        postService.deleteById(savedPost.getId(), savedUser.getUsername());
 
         //then
         List<Post> posts = postRepository.findAll();
@@ -218,11 +248,12 @@ class PostServiceTest {
                 .id(2L)
                 .title("asdfasdfasdf")
                 .content("asdfasdfadsf")
+                .category(Category.KNOWLEDGE)
                 .user(savedUser)
                 .build();
 
         //when -> then
-        assertThrows(BusinessException.class, () -> postService.deleteById(post.getId()));
+        assertThrows(BusinessException.class, () -> postService.deleteById(post.getId(), "asdf"));
     }
 
     @Test
@@ -233,6 +264,7 @@ class PostServiceTest {
         PostCreateRequest postCreateRequest = PostCreateRequest.builder()
                 .title("첫번째게시물등장")
                 .content("spring Guultip 쏩니다.")
+                .category(Category.KNOWLEDGE)
                 .username(savedUser.getUsername())
                 .build();
 

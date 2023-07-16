@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,6 +41,9 @@ public class Post extends BaseEntity {
     @Lob
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -47,11 +52,12 @@ public class Post extends BaseEntity {
     private List<Comment> comments;
 
     @Builder
-    public Post(Long id, String title, String content, User user, List<Comment> comments) {
+    public Post(Long id, String title, String content, User user, List<Comment> comments, Category category) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.user = user;
+        this.category = category;
         this.comments = new ArrayList<>();
     }
 
@@ -60,6 +66,7 @@ public class Post extends BaseEntity {
                 .id(id)
                 .title(title)
                 .content(content)
+                .category(category)
                 .userResponse(user.toDto())
                 .commentResponseList(comments.stream().map(Comment::toDto).toList())
                 .build();
@@ -68,5 +75,6 @@ public class Post extends BaseEntity {
     public void updatePost(PostUpdateRequest updateRequest) {
         this.title = updateRequest.getTitle();
         this.content = updateRequest.getContent();
+        this.category = updateRequest.getCategory();
     }
 }

@@ -16,12 +16,12 @@
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/posts">전체 글 보기</a>
-                            <a class="dropdown-item" href="/posts/qna">질문과 답변</a>
-                            <a class="dropdown-item" href="/posts/knowledge">지식 공유</a>
+                            <a class="dropdown-item" th:href="@{/posts/category/QNA}">질문과 답변</a>
+                            <a class="dropdown-item" th:href="@{/posts/category/KNOWLEDGE}">지식 공유</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/post/writeForm">글 쓰기</a>
+                        <a class="nav-link" href="/posts/writeForm">글쓰기</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/user/updateForm">회원 정보 변경👥</a>
