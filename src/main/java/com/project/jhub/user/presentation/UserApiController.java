@@ -53,12 +53,12 @@ public class UserApiController {
                 .build(), OK);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<CommonResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest updateRequest) {
+    @PatchMapping("/update")
+    public ResponseEntity<CommonResponse> updateUser(@Validated @RequestBody UserUpdateRequest updateRequest) {
         return new ResponseEntity<>(CommonResponse.builder()
                 .status(OK.value())
                 .message("유저 업데이트 성공")
-                .body(userService.update(id, updateRequest))
+                .body(userService.update(updateRequest))
                 .build(), OK);
     }
 

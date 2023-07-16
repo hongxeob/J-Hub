@@ -50,8 +50,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse update(Long id, UserUpdateRequest updateRequest) {
-        User user = userRepository.findById(id)
+    public UserResponse update(UserUpdateRequest updateRequest) {
+        User user = userRepository.findByUsername(updateRequest.getUsername())
                 .orElseThrow(() -> new BusinessException(NOT_FOUND_USER));
 
         user.updateUser(updateRequest);
