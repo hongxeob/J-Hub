@@ -172,12 +172,13 @@ class UserServiceTest {
         User savedUser = userRepository.save(user);
 
         UserUpdateRequest updateRequest = UserUpdateRequest.builder()
+                .username(savedUser.getUsername())
                 .userRole(UserRole.MENTOR)
                 .introduction("bbbb")
                 .nickname("ccc").build();
 
         //when
-        userService.update(savedUser.getId(), updateRequest);
+        userService.update(updateRequest);
 
         //then
         User foundUser = userRepository.findById(savedUser.getId()).get();
@@ -191,12 +192,13 @@ class UserServiceTest {
 
         //given
         UserUpdateRequest updateRequest = UserUpdateRequest.builder()
+                .username("asdf")
                 .userRole(UserRole.MENTOR)
                 .introduction("bbbb")
                 .nickname("ccc").build();
 
         //when -> then
-        assertThrows(BusinessException.class, () -> userService.update(1L, updateRequest));
+        assertThrows(BusinessException.class, () -> userService.update( updateRequest));
     }
 
     @Test
