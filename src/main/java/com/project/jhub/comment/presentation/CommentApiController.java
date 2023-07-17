@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -44,8 +45,11 @@ public class CommentApiController {
     }
 
     @DeleteMapping("/posts/{postId}/comment/{commentId}")
-    public ResponseEntity<CommonResponse> deleteComment(@PathVariable Long postId, @PathVariable Long commentId) {
-        commentService.deleteById(postId, commentId);
+    public ResponseEntity<CommonResponse> deleteComment(@PathVariable Long postId,
+                                                        @PathVariable Long commentId,
+                                                        @RequestParam String username) {
+
+        commentService.deleteById(postId, commentId, username);
 
         return new ResponseEntity<>(CommonResponse.builder()
                 .status(OK.value())

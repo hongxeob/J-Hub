@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.project.jhub.global.exception.ErrorCode.NOT_FOUND_COMMENT;
 import static com.project.jhub.global.exception.ErrorCode.NOT_FOUND_POST;
 import static com.project.jhub.global.exception.ErrorCode.NOT_FOUND_USER;
+import static com.project.jhub.global.exception.ErrorCode.NOT_MATCHED_USER_AND_POST;
 
 @RequiredArgsConstructor
 @Service
@@ -31,13 +32,21 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BusinessException(NOT_FOUND_POST));
 
-        User user = userRepository.findByNickname(createRequest.getNickname())
+        User user = userRepository.findByUsername(createRequest.getUsername())
                 .orElseThrow(() -> new BusinessException(NOT_FOUND_USER));
 
         createRequest.insertPostAndAuthor(post, user);
 
         Comment comment = createRequest.toEntity();
         commentRepository.save(comment);
+
+        return comment.toDto();
+    }
+
+    @Transactional(readOnly = true)
+    public CommentResponse findById(Long id) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(NOT_FOUND_COMMENT));
 
         return comment.toDto();
     }
@@ -53,10 +62,18 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteById(Long postId, Long commentId) {
+    public void deleteById(Long postId, Long commentId, String username) {
         Comment comment = commentRepository.findByPostIdAndId(postId, commentId)
                 .orElseThrow(() -> new BusinessException(NOT_FOUND_COMMENT));
 
+        sameCheckAuthorAndModifier(comment.getUser().getUsername(), username);
+
         commentRepository.deleteById(comment.getId());
+    }
+
+    private void sameCheckAuthorAndModifier(String author, String modifier) {
+        if (!author.equals(modifier)) {
+            throw new BusinessException(NOT_MATCHED_USER_AND_POST);
+        }
     }
 }

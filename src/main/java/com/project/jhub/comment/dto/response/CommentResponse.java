@@ -5,20 +5,26 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 public class CommentResponse {
 
     private Long id;
-    private String content;
     private Long postId;
+    private String content;
+    private LocalDateTime createdAt;
+    private String username;
     private String nickname;
 
     @Builder
-    public CommentResponse(Long id, String content, Long postId, String nickname) {
+    public CommentResponse(Long id, String content, Long postId, LocalDateTime createdAt, String username, String nickname) {
         this.id = id;
         this.content = content;
         this.postId = postId;
+        this.createdAt = createdAt;
+        this.username = username;
         this.nickname = nickname;
     }
 

@@ -17,12 +17,12 @@ public class CommentCreateRequest {
     private String content;
     private User user;
     private Post post;
-    private String nickname;
+    private String username;
 
     @Builder
-    public CommentCreateRequest(String content, String nickname, User user, Post post) {
+    public CommentCreateRequest(String content, String username, User user, Post post) {
         this.content = content;
-        this.nickname = nickname;
+        this.username = username;
         this.user = user;
         this.post = post;
     }

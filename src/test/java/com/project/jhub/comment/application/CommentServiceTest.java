@@ -67,7 +67,7 @@ class CommentServiceTest {
         //given
         CommentCreateRequest commentRequest = CommentCreateRequest.builder()
                 .content("댓글작성")
-                .nickname(savedUser.getNickname())
+                .username(savedUser.getUsername())
                 .build();
 
         //when
@@ -86,7 +86,7 @@ class CommentServiceTest {
         //given
         CommentCreateRequest commentRequest = CommentCreateRequest.builder()
                 .content("댓글작성")
-                .nickname(savedUser.getNickname())
+                .username(savedUser.getUsername())
                 .build();
 
         CommentResponse savedComment = commentService.write(savedPost.getId(), commentRequest);
@@ -107,7 +107,7 @@ class CommentServiceTest {
         //given
         CommentCreateRequest commentRequest = CommentCreateRequest.builder()
                 .content("댓글작성")
-                .nickname(savedUser.getNickname())
+                .username(savedUser.getUsername())
                 .build();
 
         CommentResponse savedComment =
@@ -115,7 +115,7 @@ class CommentServiceTest {
 
         //when
 
-        commentService.deleteById(savedPost.getId(), savedComment.getId());
+        commentService.deleteById(savedPost.getId(), savedComment.getId(), savedComment.getUsername());
 
         //then
         List<Comment> comments = commentRepository.findAll();

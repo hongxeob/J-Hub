@@ -50,9 +50,11 @@ public class Comment extends BaseEntity {
     public CommentResponse toDto() {
         return CommentResponse.builder()
                 .id(id)
-                .content(content)
-                .nickname(user.getNickname())
                 .postId(post.getId())
+                .content(content)
+                .createdAt(getCreateDate())
+                .username(user.getUsername())
+                .nickname(user.getNickname())
                 .build();
     }
 
