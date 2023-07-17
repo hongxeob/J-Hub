@@ -1,5 +1,7 @@
 package com.project.jhub.presentation.user;
 
+import com.project.jhub.post.application.PostService;
+import com.project.jhub.post.dto.response.PostListResponse;
 import com.project.jhub.user.application.UserService;
 import com.project.jhub.user.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserViewController {
 
     private final UserService userService;
+    private final PostService postService;
 
     @GetMapping("/joinForm")
     public String joinForm() {
@@ -29,7 +32,10 @@ public class UserViewController {
     @GetMapping("/{id}")
     public String user(@PathVariable Long id, Model model) {
         UserResponse user = userService.findById(id);
+        PostListResponse posts = postService.findByUserId(id);
+
         model.addAttribute("user", user);
+        model.addAttribute("posts", posts);
         return "user/user";
     }
 }

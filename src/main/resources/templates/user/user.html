@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <div th:replace="/layout/header.html :: fragment-header"></div>
+</head>
+
+
+<body>
+<div th:replace="/layout/nav.html :: fragment-nav"></div>
+
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>회원 정보</h2></div>
+    <div>
+        <label for="nickname">닉네임</label>
+        <input type="text" id="nickname" name="voucherId" class="form-control" th:value="${user.nickname}"
+               readonly>
+    </div>
+    <div>
+        <label for="introduction">자기 소개</label>
+        <input type="text" id="introduction" name="introduction" class="form-control" th:value="${user.introduction}"
+               readonly></div>
+    <div>
+        <label for="userRole">회원 타입</label>
+        <input type="text" id="userRole" name="userRole" class="form-control" th:value="${user.userRole}"
+               readonly>
+    </div>
+    <hr class="my-4">
+    <div class="row">
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-secondary" onclick="history.back()">돌아가기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<hr class="my-4">
+
+<div class="row">
+    <div class="col text-center">
+        <h3>작성글 목록</h3>
+        <div th:if="${posts.postResponseList.size() > 0}">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>글 번호</th>
+                    <th>제목</th>
+                    <th>작성일</th>
+                    <th>최근 수정일</th>
+                    <th>카테고리</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="post : ${posts.postResponseList}">
+                    <td th:text="${post.id}"></td>
+                    <td>
+                        <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
+                    </td>
+                    <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${#temporals.format(post.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${post.category}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${posts.postResponseList.size() == 0}">
+            <p>작성한 글이 없습니다.</p>
+        </div>
+    </div>
+</div>
+</div>
+<script src="/js/post.js"></script>
+<footer th:replace="/layout/footer.html :: fragment-footer"></footer>
+</body>
+</html>

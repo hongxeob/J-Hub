@@ -70,6 +70,7 @@ public class Post extends BaseEntity {
                 .content(content)
                 .category(category)
                 .createdAt(getCreateDate())
+                .updatedAt(getUpdateDate())
                 .userResponse(user.toDto())
                 .commentResponseList(comments.stream().map(Comment::toDto).toList())
                 .build();
