@@ -41,11 +41,8 @@ public class PostViewController {
     }
 
     @GetMapping("/{id}")
-    public String post(@PathVariable Long id, Long commentId, Model model) {
-        PostResponse post = postService.findById(id);
-//        CommentResponse comment = commentService.findById(commentId);
-
-//        model.addAttribute("comment", comment);
+    public String post(@PathVariable Long id, Model model) {
+        PostResponse post = postService.findByIdWithUserAndComments(id);
         model.addAttribute("post", post);
 
         return "post/post";

@@ -25,7 +25,7 @@
         작성자: <a th:href="@{/user/{userId}(userId=${post.userResponse.id})}">
         <span><b><i th:text="${post.userResponse.nickname}"></i></b></span>
     </a><br>
-        작성일 : <span th:text="${post.getCreatedAt()}"> </span><br>
+        작성일 : <span th:text="${#temporals.format(post.getCreatedAt(),'yyyy-MM-dd HH:mm:ss')}"> </span><br>
         카테고리 : <span th:text="${post.getCategory()}"> </span><br>
     </div>
     <br/>
@@ -59,14 +59,17 @@
                 <div class="d-flex ">
                     <div>
                         작성자: <a th:href="@{/user/{userId}(userId=${post.userResponse.id})}">
-                        <b th:text="${comment.nickname}" class="font-italic">작성자 : </b></a>
+                        <b th:text="${comment.nickname}" class="font-italic">작성자 : </b></a><br>
+                        작성일: <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span><br>
                     </div>
                     <button th:data-post-id="${post.id}" th:data-comment-id="${comment.id}"
                             th:data-username="${comment.username}"
                             class="btn btn-danger btn-sm ml-3 delete-comment-btn">삭제
                     </button>
                 </div>
+                <br>
                 <div th:utext="${comment.content}">댓글 내용</div>
+
             </li>
         </ul>
     </div>
@@ -77,5 +80,3 @@
 <footer th:replace="/layout/footer.html :: fragment-footer"></footer>
 </body>
 </html>
-
-

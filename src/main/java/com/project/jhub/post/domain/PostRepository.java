@@ -11,10 +11,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByUserId(Long userId);
 
-    @Query("SELECT distinct p FROM Post p Left JOIN FETCH p.user Left JOIN FETCH p.comments ORDER BY p.createDate DESC")
+    @Query("SELECT distinct p FROM Post p JOIN FETCH p.user Left JOIN FETCH p.comments ORDER BY p.createDate DESC")
     List<Post> findAllWithUserAndComments();
 
-    @Query("SELECT distinct p FROM Post p Left JOIN FETCH p.user Left JOIN FETCH p.comments WHERE p.id = :id")
+    @Query("SELECT distinct p FROM Post p JOIN FETCH p.user Left JOIN FETCH p.comments WHERE p.id = :id")
     Optional<Post> findByIdWithUserAndComments(@Param("id") Long id);
 
     List<Post> findByCategory(Category category);
