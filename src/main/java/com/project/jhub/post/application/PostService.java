@@ -12,10 +12,10 @@ import com.project.jhub.post.dto.response.PostResponse;
 import com.project.jhub.user.domain.User;
 import com.project.jhub.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static com.project.jhub.global.exception.ErrorCode.NOT_FOUND_POST;
 import static com.project.jhub.global.exception.ErrorCode.NOT_MATCHED_USER_AND_POST;
@@ -41,8 +41,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostListResponse findAllWithUserAndComments() {
-        List<Post> posts = postRepository.findAllWithUserAndComments();
+    public PostListResponse findAllWithUserAndComments(Pageable pageable) {
+        Page<Post> posts = postRepository.findAllWithUserAndComments(pageable);
 
         return new PostListResponse(posts.stream()
                 .map(Post::toDto)
@@ -66,11 +66,11 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostListResponse findByUserId(Long userId) {
+    public PostListResponse findByUserId(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_USER));
 
-        List<Post> posts = postRepository.findByUserId(user.getId());
+        Page<Post> posts = postRepository.findByUserId(user.getId(), pageable);
 
         return new PostListResponse(posts.stream()
                 .map(Post::toDto)
@@ -78,8 +78,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostListResponse findByCategory(Category category) {
-        List<Post> posts = postRepository.findByCategory(category);
+    public PostListResponse findByCategory(Category category, Pageable pageable) {
+        Page<Post> posts = postRepository.findByCategory(category, pageable);
 
         return new PostListResponse(posts.stream()
                 .map(Post::toDto)

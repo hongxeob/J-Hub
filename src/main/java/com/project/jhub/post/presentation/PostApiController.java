@@ -6,6 +6,7 @@ import com.project.jhub.post.domain.Category;
 import com.project.jhub.post.dto.request.PostCreateRequest;
 import com.project.jhub.post.dto.request.PostUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,11 +38,11 @@ public class PostApiController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getPostList() {
+    public ResponseEntity<CommonResponse> getPostList(Pageable pageable) {
         return new ResponseEntity<>(CommonResponse.builder()
                 .status(OK.value())
                 .message("유저 정보와 댓글까지 함께 조회 성공")
-                .body(postService.findAllWithUserAndComments())
+                .body(postService.findAllWithUserAndComments(pageable))
                 .build(), OK);
     }
 
@@ -55,20 +56,20 @@ public class PostApiController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<CommonResponse> getPostsByUserId(@PathVariable Long id) {
+    public ResponseEntity<CommonResponse> getPostsByUserId(@PathVariable Long id, Pageable pageable) {
         return new ResponseEntity<>(CommonResponse.builder()
                 .status(OK.value())
                 .message("USER ID로 게시물 조회 성공")
-                .body(postService.findByUserId(id))
+                .body(postService.findByUserId(id, pageable))
                 .build(), OK);
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<CommonResponse> getPostListByCategory(@PathVariable Category category) {
+    public ResponseEntity<CommonResponse> getPostListByCategory(@PathVariable Category category, Pageable pageable) {
         return new ResponseEntity<>(CommonResponse.builder()
                 .status(OK.value())
                 .message("해당 카테고리에 맞는 게시물 조회 성공")
-                .body(postService.findByCategory(category))
+                .body(postService.findByCategory(category, pageable))
                 .build(), OK);
     }
 

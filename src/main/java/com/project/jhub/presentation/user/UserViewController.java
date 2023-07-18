@@ -5,6 +5,9 @@ import com.project.jhub.post.dto.response.PostListResponse;
 import com.project.jhub.user.application.UserService;
 import com.project.jhub.user.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,9 +33,11 @@ public class UserViewController {
     }
 
     @GetMapping("/{id}")
-    public String user(@PathVariable Long id, Model model) {
+    public String user(@PathVariable Long id, Model model,
+                       @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+
         UserResponse user = userService.findById(id);
-        PostListResponse posts = postService.findByUserId(id);
+        PostListResponse posts = postService.findByUserId(id, pageable);
 
         model.addAttribute("user", user);
         model.addAttribute("posts", posts);

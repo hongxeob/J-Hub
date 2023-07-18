@@ -6,6 +6,9 @@ import com.project.jhub.post.domain.Category;
 import com.project.jhub.post.dto.response.PostListResponse;
 import com.project.jhub.post.dto.response.PostResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +24,10 @@ public class PostViewController {
     private final CommentService commentService;
 
     @GetMapping
-    public String posts(Model model) {
-        PostListResponse posts = postService.findAllWithUserAndComments();
+    public String posts(Model model,
+                        @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        PostListResponse posts = postService.findAllWithUserAndComments(pageable);
         model.addAttribute("posts", posts);
         return "post/posts";
     }
@@ -33,8 +38,9 @@ public class PostViewController {
     }
 
     @GetMapping("/category/{category}")
-    public String postByCategory(@PathVariable Category category, Model model) {
-        PostListResponse posts = postService.findByCategory(category);
+    public String postByCategory(@PathVariable Category category, Model model, @PageableDefault(size = 5, sort = "id",
+            direction = Sort.Direction.DESC) Pageable pageable) {
+        PostListResponse posts = postService.findByCategory(category, pageable);
         model.addAttribute("posts", posts);
         model.addAttribute("category", category);
         return "post/postByCategory";
