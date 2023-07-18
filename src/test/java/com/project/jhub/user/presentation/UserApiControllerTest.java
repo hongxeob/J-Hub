@@ -152,11 +152,12 @@ class UserApiControllerTest {
 
         UserUpdateRequest updateRequest = UserUpdateRequest.builder()
                 .nickname("abc123")
-                .introduction("44년차")
+                .username(user.getUsername())
+                .introduction("44년차444444444")
                 .userRole(UserRole.MENTEE)
                 .build();
 
-        mockMvc.perform(patch("/api/v1/user/{id}", user.getId())
+        mockMvc.perform(patch("/api/v1/user/update", user.getId())
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -97,9 +98,10 @@ class PostServiceTest {
                 .build();
 
         postService.write(postCreateRequest);
+        PageRequest pageRequest = PageRequest.of(0, 5);
 
         //when
-        PostListResponse postWithUserListResponse = postService.findAllWithUserAndComments();
+        PostListResponse postWithUserListResponse = postService.findAllWithUserAndComments(pageRequest);
 
         //then
         assertThat(postWithUserListResponse.getPostResponseList().isEmpty()).isEqualTo(false);
@@ -157,9 +159,11 @@ class PostServiceTest {
                 .build();
 
         PostResponse savedPost = postService.write(postCreateRequest);
+        PageRequest pageRequest = PageRequest.of(0, 5);
+
 
         //when
-        PostListResponse posts = postService.findByCategory(savedPost.getCategory());
+        PostListResponse posts = postService.findByCategory(savedPost.getCategory(),pageRequest);
 
         //then
         assertThat(posts.getPostResponseList().get(0).getCategory()).isEqualTo(savedPost.getCategory());
