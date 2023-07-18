@@ -7,33 +7,49 @@
         h2 {
             text-align: center;
         }
-
     </style>
 </head>
+
 <body>
 <div th:replace="/layout/nav.html :: fragment-nav"></div>
 
-<div>
-    <div class="container">
-        <h2 th:if="${not #lists.isEmpty(posts.postResponseList) and category == posts.postResponseList.get(0).category.QNA}">
-            무엇이든 물어보세요!</h2>
-        <h2 th:if="${not #lists.isEmpty(posts.postResponseList) and category == posts.postResponseList.get(0).category.KNOWLEDGE}">
-            자신의 지식을 공유해 주세요!</h2>
-        <div class="card m-2" th:each="post : ${posts.postResponseList}">
-            <div class="card-body d-flex flex-column">
-                <h4 class="card-title" th:text="${post.getTitle()}">제목</h4>
-                <a th:href="@{/posts/{id}(id=${post.getId()})}" class="btn btn-primary align-self-end">상세보기</a>
-                <h6 class="mt-1">작성자: <strong th:text="${post.getUserResponse().nickname}"> </strong>
-                </h6>
-                <h6 class="mt-1">
-                    등급 : <strong th:text="${post.getUserResponse().userRole}"></strong>
-                </h6>
-                <h6 class="mt-1">
-                    카테고리 : <strong th:text="${post.category}"></strong>
-                </h6>
-            </div>
-        </div>
-    </div>
+<div class="container">
+    <h2 th:if="${not #lists.isEmpty(posts.postResponseList) and (category == posts.postResponseList.get(0)?.category.QNA)}">
+        무엇이든 물어보세요!
+    </h2>
+    <h2 th:if="${not #lists.isEmpty(posts.postResponseList) and (category == posts.postResponseList.get(0)?.category.KNOWLEDGE)}">
+        자신의 지식을 공유해 주세요!
+    </h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>등급</th>
+            <th>카테고리</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post : ${posts.postResponseList}">
+            <td th:text="${post.getTitle()}">제목</td>
+            <td>
+                <a th:href="@{/user/{userId}(userId=${post.getUserResponse().id})}">
+                    <span><b><i th:text="${post.getUserResponse().nickname}"></i></b></span>
+                </a>
+            </td>
+            <td th:text="${#temporals.format(post.getCreatedAt(),'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${post.getUserResponse().userRole}"></td>
+            <td th:text="${post.category}"></td>
+            <td>
+                <a th:href="@{/posts/{id}(id=${post.getId()})}" class="btn align-self-end"
+                   style="background-color: #0abab5; color: #ffffff;">상세보기</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
+
 </html>
