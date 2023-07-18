@@ -29,7 +29,7 @@ public class PostApiController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<CommonResponse> writePost(@Validated @RequestBody PostCreateRequest createRequest, String username) {
+    public ResponseEntity<CommonResponse> writePost(@Validated @RequestBody PostCreateRequest createRequest) {
         return new ResponseEntity<>(CommonResponse.builder()
                 .status(CREATED.value())
                 .message("게시물 작성 성공")

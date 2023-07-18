@@ -14,7 +14,8 @@
     <div>
         <div>
             <button class="btn btn-secondary" onclick="history.back()">돌아가기</button>
-            <a th:href="@{/posts/{id}/updateForm(id=${post.id})}" class="btn btn-primary">글 수정</a>
+            <a th:href="@{/posts/{id}/updateForm(id=${post.id})}" class="btn align-self-end"
+               style="background-color: #0abab5; color: #ffffff;">글 수정</a>
             <button id="btn-delete" class="btn btn-danger">글 삭제</button>
         </div>
     </div>
@@ -45,7 +46,9 @@
                 <input type="text" id="username" class="form-control mt-2" placeholder="작성자 이름">
             </div>
             <div class="card-footer">
-                <button type="button" id="btn-comment-save" class="btn btn-primary">등록</button>
+                <button type="button" id="btn-comment-save" class="btn align-self-end"
+                        style="background-color: #0abab5; color: #ffffff;">등록
+                </button>
             </div>
         </form>
     </div>
