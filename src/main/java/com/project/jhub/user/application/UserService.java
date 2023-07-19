@@ -54,6 +54,8 @@ public class UserService {
         User user = userRepository.findByUsername(updateRequest.getUsername())
                 .orElseThrow(() -> new BusinessException(NOT_FOUND_USER));
 
+        duplicatedUser(null, updateRequest.getNickname());
+
         user.updateUser(updateRequest);
 
         return user.toDto();

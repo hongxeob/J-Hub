@@ -53,7 +53,8 @@ public class User extends BaseEntity {
     private List<Comment> comments;
 
     @Builder
-    public User(String username, String nickname, String introduction, UserRole userRole, List<Post> posts, List<Comment> comments) {
+    public User(Long id, String username, String nickname, String introduction, UserRole userRole, List<Post> posts, List<Comment> comments) {
+        this.id = id;
         this.username = username;
         this.nickname = nickname;
         this.introduction = introduction;
