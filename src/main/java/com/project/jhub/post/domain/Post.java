@@ -5,6 +5,7 @@ import com.project.jhub.global.domain.BaseEntity;
 import com.project.jhub.post.dto.request.PostUpdateRequest;
 import com.project.jhub.post.dto.response.PostResponse;
 import com.project.jhub.user.domain.User;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Post extends BaseEntity {
 
