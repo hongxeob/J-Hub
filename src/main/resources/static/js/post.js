@@ -85,6 +85,36 @@ let index = {
             category: $("#category").val(),
         }
 
+        if (username.length == 0) {
+            alert("게시물 수정 확인에 필요한 유저ID를 입력해주세요.")
+            $("#username").focus();
+            return false;
+        }
+
+        if (title.length == 0) {
+            alert("제목은 필수입니다.");
+            $("#title").focus();
+            return false;
+        }
+
+        if (title.length < 4) {
+            alert("제목은 4글자 이상 적어주세요.");
+            $("#title").focus();
+            return false;
+        }
+
+        if (content.length == 0) {
+            alert("내용은 필수입니다.");
+            $("#content").focus();
+            return false;
+        }
+
+        if (content.length < 0) {
+            alert("내용은 4자 이상 작성해 주세요.");
+            $("#content").focus();
+            return false;
+        }
+
         $.ajax({
             type: "PATCH",
             url: "/api/v1/posts/" + id,
@@ -95,7 +125,7 @@ let index = {
             alert("글이 수정 되었습니다!!🎉")
             location.href = "/posts/" + id;
         }).fail(function (error) {
-            alert(JSON.stringify(error));
+            alert("잘못된 회원 ID입니다.");
         });
     },
 
@@ -145,7 +175,7 @@ let index = {
             alert("댓글이 작성되었습니다!!🎉")
             location.href = `/posts/${postId}`;
         }).fail(function (error) {
-            alert(JSON.stringify(error));
+            alert("잘못된 회원 ID입니다.");
         });
     },
 }

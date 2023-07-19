@@ -34,7 +34,7 @@ let index = {
         }
 
         if (nickname.length === 0) {
-            alert("변경할 닉네임을 입력해주세요.")
+            alert("닉네임을 입력해주세요.")
             $("#nickname").focus();
             return false;
         }
