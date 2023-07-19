@@ -73,7 +73,6 @@ let index = {
             location.href = "/posts";
         }).fail(function (error) {
             alert("잘못된 회원 ID입니다.");
-            alert(JSON.stringify(error));
         });
     },
 
