@@ -5,7 +5,6 @@ import com.project.jhub.global.exception.BusinessException;
 import com.project.jhub.post.application.PostService;
 import com.project.jhub.post.domain.Category;
 import com.project.jhub.post.domain.Post;
-import com.project.jhub.post.domain.PostRepository;
 import com.project.jhub.post.dto.request.PostCreateRequest;
 import com.project.jhub.post.dto.response.PostListResponse;
 import com.project.jhub.post.dto.response.PostResponse;
@@ -26,7 +25,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.project.jhub.global.exception.ErrorCode.INVALID_INPUT_VALUE;
+import static com.project.jhub.global.exception.ErrorCode.NOT_FOUND_POST;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -49,9 +50,6 @@ class PostApiControllerTest {
 
     @MockBean
     UserService userService;
-
-    @MockBean
-    PostRepository postRepository;
 
     User user = null;
 
@@ -192,6 +190,24 @@ class PostApiControllerTest {
     }
 
     @Test
+    @DisplayName("게시물ID로 게시물 조회 실패 - 존재하지 않는 게시물")
+    void findByIdFailTest() throws Exception {
+
+        // given
+        Long unknownId = 100L; // 임의의 유효하지 않은 게시물 ID를 설정
+
+        // when
+        given(postService.findByIdWithUserAndComments(unknownId))
+                .willThrow(new BusinessException(NOT_FOUND_POST));
+
+        // then
+        mockMvc.perform(get("/api/v1/posts/{id}", unknownId)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @Test
     @DisplayName("유저ID로 게시물 조회 성공")
     void findByUserIdTest() throws Exception {
 
@@ -228,7 +244,7 @@ class PostApiControllerTest {
 
     @Test
     @DisplayName("게시물 ID로 단건 삭제")
-    void deleteByIdFailTest() throws Exception {
+    void deleteByIdSuccessTest() throws Exception {
 
         //given
         Post post = Post.builder()
@@ -238,12 +254,26 @@ class PostApiControllerTest {
                 .category(Category.QNA)
                 .user(user)
                 .build();
-        PageRequest pageRequest = PageRequest.of(0, 3);
 
         //then
         mockMvc.perform(delete("/api/v1/posts/{id}", post.getId())
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시물 ID로 단건 삭제 실패")
+    void deleteByIdFailTest() throws Exception {
+
+        //given
+        doThrow(new BusinessException(NOT_FOUND_POST))
+                .when(postService).deleteById(22L, "asdf");
+
+        //then
+        mockMvc.perform(delete("/api/v1/posts/{id}", 22L).param("username", "asdf")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isNotFound())
                 .andDo(print());
     }
 
