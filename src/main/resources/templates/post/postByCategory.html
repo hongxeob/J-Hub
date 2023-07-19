@@ -32,6 +32,7 @@
         </tr>
         </thead>
         <tbody>
+         <tbody>
         <tr th:each="post : ${posts.postResponseList}">
             <td th:text="${post.getTitle()}">제목</td>
             <td>
@@ -49,6 +50,14 @@
         </tr>
         </tbody>
     </table>
+    <th:block>
+        <form th:action="@{/posts}" method="get">
+            <input type="text" name="title">
+            <button type="submit" class="btn align-self-end"
+                    style="background-color: #0abab5; color: #ffffff;">검색
+            </button>
+        </form>
+    </th:block>
 </div>
 </body>
 

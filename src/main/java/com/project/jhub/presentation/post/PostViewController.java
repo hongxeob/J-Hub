@@ -1,6 +1,5 @@
 package com.project.jhub.presentation.post;
 
-import com.project.jhub.comment.application.CommentService;
 import com.project.jhub.post.application.PostService;
 import com.project.jhub.post.domain.Category;
 import com.project.jhub.post.dto.response.PostListResponse;
@@ -21,14 +20,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PostViewController {
 
     private final PostService postService;
-    private final CommentService commentService;
 
     @GetMapping
-    public String posts(Model model,
+    public String posts(Model model, String title,
                         @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        PostListResponse posts = postService.findAllWithUserAndComments(pageable);
+        PostListResponse posts = null;
+
+        if (title == null) {
+            posts = postService.findAllWithUserAndComments(pageable);
+        } else {
+            posts = postService.findByTitle(title, pageable);
+        }
+
+        model.addAttribute("postByTitle", posts);
         model.addAttribute("posts", posts);
+
         return "post/posts";
     }
 
@@ -38,9 +45,17 @@ public class PostViewController {
     }
 
     @GetMapping("/category/{category}")
-    public String postByCategory(@PathVariable Category category, Model model, @PageableDefault(size = 5, sort = "id",
+    public String postByCategory(@PathVariable Category category, String title, Model model, @PageableDefault(size = 5, sort = "id",
             direction = Sort.Direction.DESC) Pageable pageable) {
-        PostListResponse posts = postService.findByCategory(category, pageable);
+
+        PostListResponse posts = null;
+
+        if (title == null) {
+            posts = postService.findByCategory(category, pageable);
+        } else {
+            posts = postService.findByTitle(title, pageable);
+        }
+
         model.addAttribute("posts", posts);
         model.addAttribute("category", category);
         return "post/postByCategory";

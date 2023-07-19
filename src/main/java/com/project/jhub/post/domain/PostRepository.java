@@ -24,4 +24,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "select DISTINCT p from Post p join fetch p.user LEFT join fetch p.comments where p.category= :category order by p.createDate DESC"
             , countQuery = "select count(p) from Post p join p.user LEFT join  p.comments where p.category= :category")
     Page<Post> findByCategory(@Param("category") Category category, Pageable pageable);
+
+    @Query(value = "SELECT DISTINCT p FROM Post p JOIN FETCH p.user LEFT JOIN FETCH p.comments WHERE p.title LIKE %:title% ORDER BY p.createDate DESC",
+            countQuery = "SELECT COUNT(p) FROM Post p JOIN p.user LEFT JOIN p.comments WHERE p.title LIKE %:title%")
+    Page<Post> findByTitle(@Param("title") String title, Pageable pageable);
 }

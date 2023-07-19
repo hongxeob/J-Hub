@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -70,6 +71,16 @@ public class PostApiController {
                 .status(OK.value())
                 .message("해당 카테고리에 맞는 게시물 조회 성공")
                 .body(postService.findByCategory(category, pageable))
+                .build(), OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<CommonResponse> getPostListByTitle(@RequestParam("title") String title,
+                                                             Pageable pageable) {
+        return new ResponseEntity<>(CommonResponse.builder()
+                .status(OK.value())
+                .message("검색한 제목에 포함되는 게시물 조회 성공")
+                .body(postService.findByTitle(title, pageable))
                 .build(), OK);
     }
 

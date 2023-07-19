@@ -86,6 +86,15 @@ public class PostService {
                 .toList());
     }
 
+    @Transactional(readOnly = true)
+    public PostListResponse findByTitle(String searchTitle, Pageable pageable) {
+        Page<Post> posts = postRepository.findByTitle(searchTitle, pageable);
+
+        return new PostListResponse(posts.stream()
+                .map(Post::toDto)
+                .toList());
+    }
+
     @Transactional
     public void deleteById(Long id, String username) {
         Post post = postRepository.findById(id)
